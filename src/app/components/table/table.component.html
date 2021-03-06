@@ -1,25 +1,55 @@
 <div class="row-wrapper" style="border: 1px solid">
-	<div class="column">
-		<app-face-down-cards [numberOfCards]="5" [cardOverlap]="50" [rotation]="90"></app-face-down-cards>
-	</div>
-	<div class="column-center" style="border: 1px solid">
-		<div class="row" style="border: 1px solid">
-			<app-face-down-cards [numberOfCards]="5" [cardOverlap]="50" [rotation]="180"></app-face-down-cards>
-		</div>
-		<div class="row-center" style="border: 1px solid">
-			<div class="left">
-				<app-face-down-cards [numberOfCards]="33" [cardOverlap]="50" [maxCardsSpace]="250" [rotation]="0"></app-face-down-cards>
-			</div>
-			<div class="center">
-				<app-face-down-cards [numberOfCards]="1" [cardOverlap]="210" [maxCardsSpace]="800" [rotation]="0"></app-face-down-cards>
-			</div>
-			<div class="right"></div>
-		</div>
-		<div class="row" style="border: 1px solid">
-			<app-face-down-cards [numberOfCards]="5" [cardOverlap]="50" [rotation]="0"></app-face-down-cards>
-		</div>
-	</div>
-	<div class="column" style="border: 1px solid">
-		<app-face-down-cards [numberOfCards]="5" [cardOverlap]="50" [rotation]="-90"></app-face-down-cards>
-	</div>
+    <div class="column">
+        <app-face-down-cards
+            [playerName]="table?.players[0]?.name"
+            [numberOfCards]="5"
+            [cardOverlap]="50"
+            [rotation]="90"
+        ></app-face-down-cards>
+    </div>
+    <div class="column-center" style="border: 1px solid">
+        <div class="row" style="border: 1px solid">
+            <app-face-down-cards
+                [playerName]="table?.players[0]?.name"
+                [numberOfCards]="5"
+                [cardOverlap]="50"
+                [rotation]="180"
+            ></app-face-down-cards>
+        </div>
+        <div class="row-center" style="border: 1px solid">
+            <div class="left">
+                <app-face-down-cards
+                    [playerName]="table?.players[0]?.name"
+                    [numberOfCards]="33"
+                    [cardOverlap]="50"
+                    [maxCardsSpace]="250"
+                    [rotation]="0"
+                ></app-face-down-cards>
+            </div>
+            <div class="center">
+                <app-face-down-cards
+                    [numberOfCards]="1"
+                    [cardOverlap]="210"
+                    [maxCardsSpace]="800"
+                    [rotation]="0"
+                ></app-face-down-cards>
+            </div>
+            <div class="right"></div>
+        </div>
+        <div class="row" style="border: 1px solid">
+            <app-face-down-cards
+                [numberOfCards]="5"
+                [cardOverlap]="50"
+                [rotation]="0"
+            ></app-face-down-cards>
+        </div>
+    </div>
+    <div class="column" style="border: 1px solid">
+        <app-face-down-cards
+            [playerName]="table?.players[0]?.name"
+            [numberOfCards]="5"
+            [cardOverlap]="50"
+            [rotation]="-90"
+        ></app-face-down-cards>
+    </div>
 </div>

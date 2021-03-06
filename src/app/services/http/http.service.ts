@@ -31,6 +31,10 @@ export class HttpService {
 			);
 	}
 
+	getTable(tableId: string): Observable<Table> {
+		return this._http.get<Table>(this.baseUrl + 'table', { params: { tableId } });
+	}
+
 	getAllTables(): Observable<Table[]> {
 		return this._http.get<Table[]>(this.baseUrl + 'table/all');
 	}

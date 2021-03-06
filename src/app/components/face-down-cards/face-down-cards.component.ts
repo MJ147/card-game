@@ -11,6 +11,7 @@ export class FaceDownCardsComponent implements OnInit {
 	@Input() set numberOfCards(numberOfCards: number) {
 		this.numbers = Array(numberOfCards).fill(0);
 	}
+	@Input() playerName: string;
 	@Input() cardOverlap: number = 1;
 	@Input() maxCardsSpace: number = 500;
 	@Input() set rotation(rotation: number) {
