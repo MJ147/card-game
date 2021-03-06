@@ -1,51 +1,67 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from 'src/app/services/http/http.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { flatMap, mergeMap, retryWhen, switchMap } from 'rxjs/operators';
 import { Player } from 'src/app/models/table';
-import { of } from 'rxjs';
 
 @Component({
-	selector: 'app-start',
-	templateUrl: './start.component.html',
-	styleUrls: ['./start.component.less'],
+    selector: 'app-start',
+    templateUrl: './start.component.html',
+    styleUrls: ['./start.component.less']
 })
 export class StartComponent implements OnInit {
-	readonly IPN: string = 'Invalid player name, try again';
-	playerName: FormControl = new FormControl('', Validators.required);
+    playerName: FormControl = new FormControl('', [
+        Validators.minLength(3),
+        Validators.maxLength(10),
+        Validators.required
+    ]);
 
-	constructor(private _http: HttpService, private _router: Router, private _snackBar: MatSnackBar) {}
+    readonly INVALID_PLAYER_NAME = 'Invalid player name, try again.';
+    readonly MIN_PLAYER_NAME = 'Please enter at least 3 characters.';
+    readonly MAX_PLAYER_NAME = 'Please enter no more than 20 characters.';
 
-	ngOnInit(): void {
-		localStorage.clear();
-	}
+    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
 
-	createPlayer(): void {
-		if (!this.isFormControlValid(this.playerName, this.IPN)) {
-			return;
-		}
-		const player: Player = {
-			name: this.playerName.value,
-		};
+    ngOnInit(): void {
+        this.setPlayerNameInLocalStorage('');
+    }
 
-		this._http.createPlayer(player).subscribe((playerId) => {
-			this.setPlayerIdInLocalStorage(playerId);
-			this._router.navigate(['menu']);
-		});
-	}
+    createPlayer(): void {
+        if (!this.isFormControlValid(this.playerName)) {
+            return;
+        }
 
-	isFormControlValid(formControl: FormControl, message: string): boolean {
-		if (formControl.invalid) {
-			this._snackBar.open(message, null, { duration: 1000 });
-			return false;
-		}
-		return true;
-	}
+        const player: Player = {
+            name: this.playerName.value
+        };
 
-	// TODO: change temporary solution with local storage to BEARER
-	setPlayerIdInLocalStorage(playerId: number): void {
-		localStorage.setItem('playerId', playerId.toString());
-	}
+        //TODO add player to websocket
+        this.setPlayerNameInLocalStorage(player.name);
+        this._router.navigate(['menu']);
+    }
+
+    isFormControlValid(formControl: FormControl): boolean {
+        if (formControl.valid) {
+            return true;
+        }
+
+        formControl.markAsTouched();
+        let message = this.INVALID_PLAYER_NAME;
+
+        if (formControl.hasError('maxlength')) {
+            message = this.MIN_PLAYER_NAME;
+        }
+
+        if (formControl.hasError('minlength')) {
+            message = this.MIN_PLAYER_NAME;
+        }
+
+        this._snackBar.open(message, null, { duration: 2000 });
+
+        return false;
+    }
+
+    setPlayerNameInLocalStorage(playerName: string): void {
+        localStorage.setItem('playerName', playerName);
+    }
 }

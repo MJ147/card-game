@@ -1,14 +1,38 @@
 <div class="menu">
-	<mat-card>
-		<mat-card-header>
-			<mat-card-title>ENTER YOUR NAME</mat-card-title>
-		</mat-card-header>
-		<mat-card-content>
-			<mat-form-field name="playerName">
-				<mat-label>Player name</mat-label>
-				<input matInput autocomplete="off" maxlength="20" [formControl]="playerName" />
-			</mat-form-field>
-			<button mat-raised-button color="accent" class="create-button" (click)="createPlayer()">CREATE PLAYER</button>
-		</mat-card-content>
-	</mat-card>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>ENTER YOUR NAME</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field name="playerName" (keyup.enter)="createPlayer()">
+                <mat-label>Player name</mat-label>
+                <input
+                    matInput
+                    autocomplete="off"
+                    maxlength="20"
+                    [formControl]="playerName"
+                />
+                <mat-error
+                    *ngIf="playerName.hasError('required')"
+                    [innerText]="INVALID_PLAYER_NAME"
+                ></mat-error>
+                <mat-error
+                    *ngIf="playerName.hasError('minlength')"
+                    [innerText]="MIN_PLAYER_NAME"
+                ></mat-error>
+                <mat-error
+                    *ngIf="playerName.hasError('maxlength')"
+                    [innerText]="MAX_PLAYER_NAME"
+                ></mat-error>
+            </mat-form-field>
+            <button
+                mat-raised-button
+                color="accent"
+                class="create-button"
+                (click)="createPlayer()"
+            >
+                CREATE PLAYER
+            </button>
+        </mat-card-content>
+    </mat-card>
 </div>

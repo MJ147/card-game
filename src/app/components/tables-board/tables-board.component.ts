@@ -6,52 +6,82 @@ import { HttpService } from 'src/app/services/http/http.service';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
-	selector: 'app-tables-board',
-	templateUrl: './tables-board.component.html',
-	styleUrls: ['./tables-board.component.less'],
+    selector: 'app-tables-board',
+    templateUrl: './tables-board.component.html',
+    styleUrls: ['./tables-board.component.less']
 })
 export class TablesBoardComponent implements OnInit {
-	readonly ITN: string = 'Invalid table name, try again';
-	tableName: FormControl = new FormControl('', Validators.required);
-	tables: Table[];
+    readonly ITN: string = 'Invalid table name, try again';
+    tableName: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+    ]);
+    tables: Table[];
 
-	constructor(private _http: HttpService, private _router: Router, private _snackBar: MatSnackBar) {}
+    readonly INVALID_TABLE_NAME = 'Invalid table name, try again.';
+    readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
+    readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
 
-	ngOnInit(): void {
-		this.getAllTables();
-	}
+    constructor(
+        private _http: HttpService,
+        private _router: Router,
+        private _snackBar: MatSnackBar
+    ) {}
 
-	getAllTables(): void {
-		this._http.getAllTables().subscribe((tables) => {
-			this.tables = tables;
-			console.log(tables);
-		});
-	}
-	joinTable(table: Table): void {
-		this._http.addPlayer(table.id.toString(), localStorage.getItem('playerId')).subscribe(() => {
-			this._router.navigate(['table', table.id]);
-		});
-	}
+    ngOnInit(): void {
+        this.getAllTables();
+    }
 
-	createTable(): void {
-		if (!this.isFormControlValid(this.tableName, this.ITN)) {
-			return;
-		}
-		this._http.createTable(this.tableName.value, this.playerIdFromLocalStorage).subscribe((tableId) => {
-			this._router.navigate(['table', tableId]);
-		});
-	}
+    getAllTables(): void {
+        this._http.getAllTables().subscribe((tables) => {
+            this.tables = tables;
+            console.log(tables);
+        });
+    }
+    joinTable(table: Table): void {
+        this._http
+            .addPlayer(table.id.toString(), localStorage.getItem('playerId'))
+            .subscribe(() => {
+                this._router.navigate(['table', table.id]);
+            });
+    }
 
-	isFormControlValid(formControl: FormControl, message: string): boolean {
-		if (formControl.invalid) {
-			this._snackBar.open(message, null, { duration: 1000 });
-			return false;
-		}
-		return true;
-	}
+    createTable(): void {
+        if (!this.isFormControlValid(this.tableName)) {
+            return;
+        }
+        this._http
+            .createTable(this.tableName.value, this.playerIdFromLocalStorage)
+            .subscribe((tableId) => {
+                this._router.navigate(['table', tableId]);
+            });
+    }
 
-	// TODO: change temporary solution with local storage to BEARER
-	get playerIdFromLocalStorage(): string {
-		return localStorage.getItem('playerId');
-	}
+    isFormControlValid(formControl: FormControl): boolean {
+        if (formControl.valid) {
+            return true;
+        }
+
+        formControl.markAsTouched();
+
+        let message = this.INVALID_TABLE_NAME;
+
+        if (formControl.hasError('maxlength')) {
+            message = this.MIN_TABLE_NAME;
+        }
+
+        if (formControl.hasError('minlength')) {
+            message = this.MIN_TABLE_NAME;
+        }
+
+        this._snackBar.open(message, null, { duration: 2000 });
+
+        return false;
+    }
+
+    // TODO: change temporary solution with local storage to BEARER
+    get playerIdFromLocalStorage(): string {
+        return localStorage.getItem('playerId');
+    }
 }

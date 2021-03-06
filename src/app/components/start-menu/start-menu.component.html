@@ -1,13 +1,37 @@
 <div class="menu">
-	<mat-expansion-panel hideToggle>
-		<mat-expansion-panel-header>
-			<mat-panel-title> <span>CREATE NEW TABLE</span> </mat-panel-title>
-		</mat-expansion-panel-header>
-		<mat-form-field name="tableName">
-			<mat-label>Table name</mat-label>
-			<input matInput autocomplete="off" [formControl]="tableName" />
-		</mat-form-field>
-		<button mat-raised-button color="accent" class="create-button" (click)="createTable()">CREATE</button>
-	</mat-expansion-panel>
-	<button mat-raised-button class="join-button" (click)="openTablesBoard()">JOIN TABLE</button>
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title> <span>CREATE NEW TABLE</span> </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-form-field name="tableName" (keyup.enter)="createTable()">
+            <mat-label>Table name</mat-label>
+            <input matInput autocomplete="off" [formControl]="tableName" />
+            <mat-error
+                *ngIf="tableName.hasError('required')"
+                [innerText]="INVALID_TABLE_NAME"
+            ></mat-error>
+            <mat-error
+                *ngIf="tableName.hasError('minlength')"
+                [innerText]="MIN_TABLE_NAME"
+            ></mat-error>
+            <mat-error
+                *ngIf="tableName.hasError('maxlength')"
+                [innerText]="MAX_TABLE_NAME"
+            ></mat-error>
+        </mat-form-field>
+        <button
+            mat-raised-button
+            color="accent"
+            class="create-button"
+            autocomplete="off"
+            maxlength="20"
+            (click)="createTable()"
+        >
+            CREATE
+        </button>
+    </mat-expansion-panel>
+    <button mat-raised-button class="join-button" (click)="openTablesBoard()">
+        JOIN TABLE
+    </button>
 </div>

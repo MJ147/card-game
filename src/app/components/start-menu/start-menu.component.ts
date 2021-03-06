@@ -3,51 +3,61 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from 'src/app/services/http/http.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { flatMap, mergeMap, retryWhen, switchMap } from 'rxjs/operators';
 import { Player } from 'src/app/models/table';
-import { of } from 'rxjs';
 
 @Component({
-	selector: 'app-start-menu',
-	templateUrl: './start-menu.component.html',
-	styleUrls: ['./start-menu.component.less'],
+    selector: 'app-start-menu',
+    templateUrl: './start-menu.component.html',
+    styleUrls: ['./start-menu.component.less']
 })
 export class StartMenuComponent implements OnInit {
-	readonly ITN: string = 'Invalid table name, try again';
-	player: Player;
-	playerName: FormControl = new FormControl('', Validators.required);
-	tableName: FormControl = new FormControl('', Validators.required);
+    readonly ITN: string = 'Invalid table name, try again';
+    player: Player;
+    tableName: FormControl = new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+    ]);
 
-	constructor(private _http: HttpService, private _router: Router, private _snackBar: MatSnackBar) {}
+    readonly INVALID_TABLE_NAME = 'Invalid table name, try again.';
+    readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
+    readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
 
-	ngOnInit(): void {}
+    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
 
-	createTable(): void {
-		if (!this.isFormControlValid(this.tableName, this.ITN)) {
-			return;
-		}
-		const player: Player = {
-			name: this.playerName.value,
-		};
-		this._http.createTable(this.tableName.value, this.playerIdFromLocalStorage).subscribe((tableId) => {
-			this._router.navigate(['table', tableId]);
-		});
-	}
+    ngOnInit(): void {}
 
-	openTablesBoard(): void {
-		this._router.navigate(['tables']);
-	}
+    createTable(): void {
+        if (!this.isFormControlValid(this.tableName)) {
+            return;
+        }
+        // TODO: add table to websocket
+        this._router.navigate(['table', this.tableName.value]);
+    }
 
-	isFormControlValid(formControl: FormControl, message: string): boolean {
-		if (formControl.invalid) {
-			this._snackBar.open(message, null, { duration: 1000 });
-			return false;
-		}
-		return true;
-	}
+    openTablesBoard(): void {
+        this._router.navigate(['tables']);
+    }
 
-	// TODO: change temporary solution with local storage to BEARER
-	get playerIdFromLocalStorage(): string {
-		return localStorage.getItem('playerId');
-	}
+    isFormControlValid(formControl: FormControl): boolean {
+        if (formControl.valid) {
+            return true;
+        }
+
+        formControl.markAsTouched();
+
+        let message = this.INVALID_TABLE_NAME;
+
+        if (formControl.hasError('maxlength')) {
+            message = this.MIN_TABLE_NAME;
+        }
+
+        if (formControl.hasError('minlength')) {
+            message = this.MIN_TABLE_NAME;
+        }
+
+        this._snackBar.open(message, null, { duration: 2000 });
+
+        return false;
+    }
 }
