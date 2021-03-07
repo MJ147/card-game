@@ -1,6 +1,5 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from 'src/app/services/http/http.service';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Player } from 'src/app/models/table';
@@ -11,7 +10,6 @@ import { Player } from 'src/app/models/table';
     styleUrls: ['./start-menu.component.less']
 })
 export class StartMenuComponent implements OnInit {
-    readonly ITN: string = 'Invalid table name, try again';
     player: Player;
     tableName: FormControl = new FormControl('', [
         Validators.required,

@@ -1,24 +1,21 @@
-import { HttpService } from './../../services/http/http.service';
-import { Component, OnInit } from '@angular/core';
 import { Table } from 'src/app/models/table';
 import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'app-table',
-	templateUrl: './table.component.html',
-	styleUrls: ['./table.component.less'],
+    selector: 'app-table',
+    templateUrl: './table.component.html',
+    styleUrls: ['./table.component.less']
 })
 export class TableComponent implements OnInit {
-	table: Table;
+    table: Table;
 
-	constructor(private _http: HttpService, private _activatedRoute: ActivatedRoute) {}
+    constructor(private _activatedRoute: ActivatedRoute) {}
 
-	ngOnInit(): void {
-		const tableId = this._activatedRoute.snapshot.params.id;
-		this.setTable(tableId);
-	}
+    ngOnInit(): void {
+        const tableId = this._activatedRoute.snapshot.params.id;
+        this.setTable(tableId);
+    }
 
-	setTable(tableId: number): void {
-		this._http.getTable(tableId.toString()).subscribe(() => {});
-	}
+    setTable(tableId: number): void {}
 }

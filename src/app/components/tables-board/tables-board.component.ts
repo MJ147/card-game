@@ -2,7 +2,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Table } from './../../models/table';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from 'src/app/services/http/http.service';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -23,39 +22,35 @@ export class TablesBoardComponent implements OnInit {
     readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
     readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
 
-    constructor(
-        private _http: HttpService,
-        private _router: Router,
-        private _snackBar: MatSnackBar
-    ) {}
+    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
 
     ngOnInit(): void {
         this.getAllTables();
     }
 
     getAllTables(): void {
-        this._http.getAllTables().subscribe((tables) => {
-            this.tables = tables;
-            console.log(tables);
-        });
+        // this._http.getAllTables().subscribe((tables) => {
+        //     this.tables = tables;
+        //     console.log(tables);
+        // });
     }
     joinTable(table: Table): void {
-        this._http
-            .addPlayer(table.id.toString(), localStorage.getItem('playerId'))
-            .subscribe(() => {
-                this._router.navigate(['table', table.id]);
-            });
+        // this._http
+        //     .addPlayer(table.id.toString(), localStorage.getItem('playerId'))
+        //     .subscribe(() => {
+        //         this._router.navigate(['table', table.id]);
+        //     });
     }
 
     createTable(): void {
         if (!this.isFormControlValid(this.tableName)) {
             return;
         }
-        this._http
-            .createTable(this.tableName.value, this.playerIdFromLocalStorage)
-            .subscribe((tableId) => {
-                this._router.navigate(['table', tableId]);
-            });
+        // this._http
+        //     .createTable(this.tableName.value, this.playerIdFromLocalStorage)
+        //     .subscribe((tableId) => {
+        //         this._router.navigate(['table', tableId]);
+        //     });
     }
 
     isFormControlValid(formControl: FormControl): boolean {

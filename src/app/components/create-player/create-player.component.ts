@@ -5,11 +5,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Player } from 'src/app/models/table';
 
 @Component({
-    selector: 'app-start',
-    templateUrl: './start.component.html',
-    styleUrls: ['./start.component.less']
+    selector: 'app-create-player',
+    templateUrl: './create-player.component.html',
+    styleUrls: ['./create-player.component.less']
 })
-export class StartComponent implements OnInit {
+export class CreatePlayerComponent implements OnInit {
     playerName: FormControl = new FormControl('', [
         Validators.minLength(3),
         Validators.maxLength(10),
