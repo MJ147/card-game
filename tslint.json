@@ -74,7 +74,6 @@
 		},
 		"use-lifecycle-interface": false,
 		"use-pipe-transform-interface": true,
-		"indent": [true, "tabs"],
 		"no-any": true,
 		"typedef": [true, "call-signature", "parameter", "property-declaration", "member-variable-declaration"],
 		"curly": [true],
