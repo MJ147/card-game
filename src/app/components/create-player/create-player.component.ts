@@ -1,3 +1,4 @@
+import { WebsocketService } from './../../services/websocket.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
@@ -20,7 +21,11 @@ export class CreatePlayerComponent implements OnInit {
     readonly MIN_PLAYER_NAME = 'Please enter at least 3 characters.';
     readonly MAX_PLAYER_NAME = 'Please enter no more than 20 characters.';
 
-    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
+    constructor(
+        private _r: Router,
+        private _msb: MatSnackBar,
+        private _wss: WebsocketService
+    ) {}
 
     ngOnInit(): void {
         this.setPlayerNameInLocalStorage('');
@@ -31,13 +36,12 @@ export class CreatePlayerComponent implements OnInit {
             return;
         }
 
-        const player: Player = {
-            name: this.playerName.value
-        };
+        const playerName = this.playerName.value;
 
-        //TODO add player to websocket
-        this.setPlayerNameInLocalStorage(player.name);
-        this._router.navigate(['menu']);
+        this._wss.emit('setPlayer', playerName);
+
+        this.setPlayerNameInLocalStorage(playerName);
+        this._r.navigate(['menu']);
     }
 
     isFormControlValid(formControl: FormControl): boolean {
@@ -56,7 +60,7 @@ export class CreatePlayerComponent implements OnInit {
             message = this.MIN_PLAYER_NAME;
         }
 
-        this._snackBar.open(message, null, { duration: 2000 });
+        this._msb.open(message, null, { duration: 2000 });
 
         return false;
     }

@@ -6,19 +6,22 @@ import { io } from 'socket.io-client';
     providedIn: 'root'
 })
 export class WebsocketService {
-    socket: any;
-    readonly URL: string = 'ws://localhost:3000';
+    private _socket: any;
+    private readonly _URL: string = 'ws://localhost:3000';
+
     constructor() {
-        this.socket = io(this.URL);
+        this._socket = io(this._URL);
     }
+
     listen(eventName: string) {
         return new Observable((subscriber) => {
-            this.socket.on(eventName, (data) => {
+            this._socket.on(eventName, (data) => {
                 subscriber.next(data);
             });
         });
     }
+
     emit(eventName: string, data: any) {
-        this.socket.emit(eventName, data);
+        this._socket.emit(eventName, data);
     }
 }
