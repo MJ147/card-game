@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Player } from 'src/app/models/table';
 
 @Component({
     selector: 'app-create-player',
@@ -20,6 +19,7 @@ export class CreatePlayerComponent implements OnInit {
     readonly INVALID_PLAYER_NAME = 'Invalid player name, try again.';
     readonly MIN_PLAYER_NAME = 'Please enter at least 3 characters.';
     readonly MAX_PLAYER_NAME = 'Please enter no more than 20 characters.';
+    readonly PLAYER_NAME_ALREADY_EXISTS = 'Player name already exists';
 
     constructor(
         private _r: Router,
@@ -28,7 +28,16 @@ export class CreatePlayerComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.setPlayerNameInLocalStorage('');
+        this._wss.listen('playerId').subscribe((uuid) => {
+            if (uuid == null) {
+                this._msb.open(this.PLAYER_NAME_ALREADY_EXISTS, null, {
+                    duration: 2000
+                });
+                return;
+            }
+
+            this._r.navigate(['menu']);
+        });
     }
 
     createPlayer(): void {
@@ -36,12 +45,7 @@ export class CreatePlayerComponent implements OnInit {
             return;
         }
 
-        const playerName = this.playerName.value;
-
-        this._wss.emit('setPlayer', playerName);
-
-        this.setPlayerNameInLocalStorage(playerName);
-        this._r.navigate(['menu']);
+        this._wss.emit('createPlayer', this.playerName.value);
     }
 
     isFormControlValid(formControl: FormControl): boolean {
@@ -63,9 +67,5 @@ export class CreatePlayerComponent implements OnInit {
         this._msb.open(message, null, { duration: 2000 });
 
         return false;
-    }
-
-    setPlayerNameInLocalStorage(playerName: string): void {
-        localStorage.setItem('playerName', playerName);
     }
 }

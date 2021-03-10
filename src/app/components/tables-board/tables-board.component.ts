@@ -3,6 +3,7 @@ import { Table } from './../../models/table';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
     selector: 'app-tables-board',
@@ -22,17 +23,29 @@ export class TablesBoardComponent implements OnInit {
     readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
     readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
 
-    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
+    constructor(
+        private _r: Router,
+        private _msb: MatSnackBar,
+        private _wss: WebsocketService
+    ) {}
 
     ngOnInit(): void {
+        this._wss.listen('allTables').subscribe((tables: Table[]) => {
+            console.log(tables);
+
+            if (tables.length === 0) {
+                return;
+            }
+
+            this.tables = tables;
+            console.log(tables);
+        });
+
         this.getAllTables();
     }
 
     getAllTables(): void {
-        // this._http.getAllTables().subscribe((tables) => {
-        //     this.tables = tables;
-        //     console.log(tables);
-        // });
+        this._wss.emit('getAllTables', this.tableName.value);
     }
     joinTable(table: Table): void {
         // this._http
@@ -70,7 +83,7 @@ export class TablesBoardComponent implements OnInit {
             message = this.MIN_TABLE_NAME;
         }
 
-        this._snackBar.open(message, null, { duration: 2000 });
+        this._msb.open(message, null, { duration: 2000 });
 
         return false;
     }

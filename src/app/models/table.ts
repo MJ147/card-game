@@ -1,19 +1,25 @@
 export interface Table {
-    id: number;
+    uuid: string;
     name: string;
-    deck: Card[];
     players: Player[];
-    cards: Card[]; // cards on table
+    cards: Card[];
 }
 
 export interface Player {
-    id: number;
     name: string;
+}
+
+export interface ForeignPlayer extends Player {
+    numberOfcards: number;
+}
+
+export interface OwnPlayer extends Player {
+    uuid: string;
     cards?: Card[];
 }
 
 export interface Card {
-    id: number;
+    uuid: string;
     rank: string;
     suit: string;
 }

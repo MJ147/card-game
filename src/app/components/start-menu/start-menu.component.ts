@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Player } from 'src/app/models/table';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
     selector: 'app-start-menu',
@@ -20,21 +21,37 @@ export class StartMenuComponent implements OnInit {
     readonly INVALID_TABLE_NAME = 'Invalid table name, try again.';
     readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
     readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
+    readonly TABLE_NAME_ALREADY_EXISTS = 'Table name already exists';
 
-    constructor(private _router: Router, private _snackBar: MatSnackBar) {}
+    constructor(
+        private _r: Router,
+        private _msb: MatSnackBar,
+        private _wss: WebsocketService
+    ) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this._wss.listen('tableId').subscribe((uuid) => {
+            if (uuid == null) {
+                this._msb.open(this.TABLE_NAME_ALREADY_EXISTS, null, {
+                    duration: 2000
+                });
+                return;
+            }
+
+            this._r.navigate(['table', this.tableName.value]);
+        });
+    }
 
     createTable(): void {
         if (!this.isFormControlValid(this.tableName)) {
             return;
         }
-        // TODO: add table to websocket
-        this._router.navigate(['table', this.tableName.value]);
+
+        this._wss.emit('createTable', this.tableName.value);
     }
 
     openTablesBoard(): void {
-        this._router.navigate(['tables']);
+        this._r.navigate(['tables']);
     }
 
     isFormControlValid(formControl: FormControl): boolean {
@@ -54,7 +71,7 @@ export class StartMenuComponent implements OnInit {
             message = this.MIN_TABLE_NAME;
         }
 
-        this._snackBar.open(message, null, { duration: 2000 });
+        this._msb.open(message, null, { duration: 2000 });
 
         return false;
     }
