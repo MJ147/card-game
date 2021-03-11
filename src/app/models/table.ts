@@ -1,5 +1,5 @@
 export interface Table {
-    uuid: string;
+    id: string;
     name: string;
     players: Player[];
     cards: Card[];
@@ -14,12 +14,12 @@ export interface ForeignPlayer extends Player {
 }
 
 export interface OwnPlayer extends Player {
-    uuid: string;
+    id: string;
     cards?: Card[];
 }
 
 export interface Card {
-    uuid: string;
+    id: string;
     rank: string;
     suit: string;
 }

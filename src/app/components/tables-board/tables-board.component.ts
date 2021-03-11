@@ -22,6 +22,7 @@ export class TablesBoardComponent implements OnInit {
     readonly INVALID_TABLE_NAME = 'Invalid table name, try again.';
     readonly MIN_TABLE_NAME = 'Please enter at least 3 characters.';
     readonly MAX_TABLE_NAME = 'Please enter no more than 20 characters.';
+    readonly TABLE_NAME_ALREADY_EXISTS = 'Table name already exists';
 
     constructor(
         private _r: Router,
@@ -31,14 +32,31 @@ export class TablesBoardComponent implements OnInit {
 
     ngOnInit(): void {
         this._wss.listen('allTables').subscribe((tables: Table[]) => {
-            console.log(tables);
-
             if (tables.length === 0) {
                 return;
             }
+            console.log(tables);
 
             this.tables = tables;
-            console.log(tables);
+        });
+
+        this._wss.listen('tableId').subscribe((id) => {
+            if (id == null) {
+                return;
+            }
+
+            this._r.navigate(['table', this.tableName.value]);
+        });
+
+        this._wss.listen('tableId').subscribe((id) => {
+            if (id == null) {
+                this._msb.open(this.TABLE_NAME_ALREADY_EXISTS, null, {
+                    duration: 2000
+                });
+                return;
+            }
+
+            this._r.navigate(['table', this.tableName.value]);
         });
 
         this.getAllTables();
@@ -47,23 +65,18 @@ export class TablesBoardComponent implements OnInit {
     getAllTables(): void {
         this._wss.emit('getAllTables', this.tableName.value);
     }
+
     joinTable(table: Table): void {
-        // this._http
-        //     .addPlayer(table.id.toString(), localStorage.getItem('playerId'))
-        //     .subscribe(() => {
-        //         this._router.navigate(['table', table.id]);
-        //     });
+        console.log(table);
+
+        this._wss.emit('joinTable', table.id);
     }
 
     createTable(): void {
         if (!this.isFormControlValid(this.tableName)) {
             return;
         }
-        // this._http
-        //     .createTable(this.tableName.value, this.playerIdFromLocalStorage)
-        //     .subscribe((tableId) => {
-        //         this._router.navigate(['table', tableId]);
-        //     });
+        this._wss.emit('createTable', this.tableName.value);
     }
 
     isFormControlValid(formControl: FormControl): boolean {
@@ -86,10 +99,5 @@ export class TablesBoardComponent implements OnInit {
         this._msb.open(message, null, { duration: 2000 });
 
         return false;
-    }
-
-    // TODO: change temporary solution with local storage to BEARER
-    get playerIdFromLocalStorage(): string {
-        return localStorage.getItem('playerId');
     }
 }

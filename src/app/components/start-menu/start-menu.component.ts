@@ -30,8 +30,8 @@ export class StartMenuComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this._wss.listen('tableId').subscribe((uuid) => {
-            if (uuid == null) {
+        this._wss.listen('tableId').subscribe((id) => {
+            if (id == null) {
                 this._msb.open(this.TABLE_NAME_ALREADY_EXISTS, null, {
                     duration: 2000
                 });

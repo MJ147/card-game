@@ -26,6 +26,8 @@ export class WebsocketService {
     }
 
     emit(eventName: string, data: any): void {
+        console.log(eventName);
+
         this._socket.emit(eventName, { data, uuid: this._uuid });
     }
 }
