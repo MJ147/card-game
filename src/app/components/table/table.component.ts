@@ -1,3 +1,4 @@
+import { WebsocketService } from './../../services/websocket.service';
 import { Table } from 'src/app/models/table';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -10,12 +11,9 @@ import { Component, OnInit } from '@angular/core';
 export class TableComponent implements OnInit {
     table: Table;
 
-    constructor(private _activatedRoute: ActivatedRoute) {}
+    constructor(private _ar: ActivatedRoute, private _wss: WebsocketService) {}
 
     ngOnInit(): void {
-        const tableId = this._activatedRoute.snapshot.params.id;
-        this.setTable(tableId);
+        const tableId = this._ar.snapshot.params.id;
     }
-
-    setTable(tableId: number): void {}
 }

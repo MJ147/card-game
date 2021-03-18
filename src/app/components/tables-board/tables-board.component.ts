@@ -67,8 +67,6 @@ export class TablesBoardComponent implements OnInit {
     }
 
     joinTable(table: Table): void {
-        console.log(table);
-
         this._wss.emit('joinTable', table.id);
     }
 
@@ -76,6 +74,7 @@ export class TablesBoardComponent implements OnInit {
         if (!this.isFormControlValid(this.tableName)) {
             return;
         }
+
         this._wss.emit('createTable', this.tableName.value);
     }
 
