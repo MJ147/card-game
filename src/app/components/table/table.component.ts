@@ -14,6 +14,11 @@ export class TableComponent implements OnInit {
     constructor(private _ar: ActivatedRoute, private _wss: WebsocketService) {}
 
     ngOnInit(): void {
-        const tableId = this._ar.snapshot.params.id;
+        this._wss.listen('table').subscribe((data) => {
+            this.table = data;
+            console.log(this.table);
+        });
+
+        this._wss.emit('updateTable');
     }
 }
