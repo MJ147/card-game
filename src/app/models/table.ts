@@ -2,10 +2,12 @@ export interface Table {
     id: string;
     name: string;
     players: Player[];
+    deck: number;
     cards: Card[];
 }
 
 export interface Player {
+    id: string;
     name: string;
 }
 
@@ -14,7 +16,6 @@ export interface ForeignPlayer extends Player {
 }
 
 export interface OwnPlayer extends Player {
-    id: string;
     cards?: Card[];
 }
 

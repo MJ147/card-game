@@ -27,7 +27,10 @@ export class WebsocketService {
 
     emit(eventName: string, data: any = null): void {
         console.log(eventName);
-
         this._socket.emit(eventName, { data, uuid: this._uuid });
+    }
+
+    get playerId(): string {
+        return this._uuid;
     }
 }
