@@ -40,7 +40,7 @@
         <div class="row" style="border: 1px solid">
             <app-face-down-cards
                 [playerName]="table?.players[0]?.name || ''"
-                [numberOfCards]="getPlayerCards(table?.players[0]) || 0"
+                [cards]="getPlayerCards(table?.players[0]) || []"
                 [cardOverlap]="50"
                 [rotation]="0"
             ></app-face-down-cards>

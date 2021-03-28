@@ -1,9 +1,10 @@
 <div *ngIf="playerName != null" [innerText]="playerName"></div>
 <div class="card-wrapper" [ngClass]="rotation === 90 ? '' : 'rotate90'">
     <img
-        *ngFor="let number of numbers; let i = index"
+        *ngFor="let number of ownCards; let i = index"
         src="assets/cards/card-back.png"
         alt="card back"
         [ngStyle]="{ left: getMoveFromLeft(i) }"
+        innerText="sdada"
     />
 </div>

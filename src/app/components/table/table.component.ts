@@ -16,25 +16,22 @@ export class TableComponent implements OnInit {
 
     ngOnInit(): void {
         this._wss.listen('table').subscribe((table) => {
-            console.log(table);
             table.players = this.sortPlayers(table.players);
             this.table = table;
+            console.log(table);
         });
 
         this._wss.emit('updateTable');
     }
 
     sortPlayers(players: Player[]): Player[] {
-        console.log(players);
+        while (players.length < 4) {
+            players.push(null);
+        }
 
-        const offset = players.findIndex(
-            (player) => player.id === this._wss.playerId
-        );
-
-        console.log(offset);
-
+        const offset =
+            4 - players.findIndex((player) => player.id === this._wss.playerId);
         const arr = [...players.splice(players.length - offset), ...players];
-        console.log(arr);
         return arr;
     }
 
