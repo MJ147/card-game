@@ -1,57 +1,37 @@
 <div class="row-wrapper" style="border: 1px solid">
     <div class="column">
+        <!-- table?.players[2]?.name || 'Waiting for a player...' -->
         <app-face-down-cards
-            [playerName]="table?.players[1]?.name || 'Waiting for a player...'"
-            [numberOfCards]="getPlayerCards(table?.players[1]) || 0"
-            [cardOverlap]="50"
-            [rotation]="90"
+            [cards]="getPlayerCards(table?.players[1])"
         ></app-face-down-cards>
     </div>
     <div class="column-center" style="border: 1px solid">
         <div class="row" style="border: 1px solid">
             <app-face-down-cards
-                [playerName]="
-                    table?.players[2]?.name || 'Waiting for a player...'
-                "
-                [numberOfCards]="getPlayerCards(table?.players[2]) || 0"
-                [cardOverlap]="50"
-                [rotation]="180"
+                [cards]="getPlayerCards(table?.players[2])"
             ></app-face-down-cards>
         </div>
         <div class="row-center" style="border: 1px solid">
             <div class="left">
                 <app-face-down-cards
-                    [numberOfCards]="52 || 0"
-                    [cardOverlap]="50"
-                    [maxCardsSpace]="270"
-                    [rotation]="0"
+                    [cards]="getArrayFromNumber(52)"
                 ></app-face-down-cards>
             </div>
             <div class="center">
                 <app-face-down-cards
-                    [numberOfCards]="table?.cards || 0"
-                    [cardOverlap]="210"
-                    [maxCardsSpace]="800"
-                    [rotation]="0"
+                    [cards]="table?.cards"
                 ></app-face-down-cards>
             </div>
             <div class="right"></div>
         </div>
         <div class="row" style="border: 1px solid">
             <app-face-down-cards
-                [playerName]="table?.players[0]?.name || ''"
-                [cards]="getPlayerCards(table?.players[0]) || []"
-                [cardOverlap]="50"
-                [rotation]="0"
+                [cards]="getPlayerCards(table?.players[0])"
             ></app-face-down-cards>
         </div>
     </div>
     <div class="column" style="border: 1px solid">
-        <app-face-down-cards
-            [playerName]="table?.players[3]?.name || 'Waiting for a player...'"
-            [numberOfCards]="getPlayerCards(table?.players[3]) || 0"
-            [cardOverlap]="50"
-            [rotation]="-90"
-        ></app-face-down-cards>
+        <!-- [playerName]="table?.players[3]?.name || 'Waiting for a player...'" -->
+        <app-face-down-cards [cards]="[null, null, null]"></app-face-down-cards>
     </div>
 </div>

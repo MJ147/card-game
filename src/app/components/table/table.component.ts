@@ -45,9 +45,13 @@ export class TableComponent implements OnInit {
         const numberOfCards = (player as ForeignPlayer)?.numberOfcards;
 
         if (numberOfCards != null) {
-            return numberOfCards;
+            return new Array(numberOfCards);
         }
 
-        return;
+        return [];
+    }
+
+    getArrayFromNumber(number: number) {
+        return new Array(number);
     }
 }

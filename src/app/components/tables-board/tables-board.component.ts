@@ -35,7 +35,6 @@ export class TablesBoardComponent implements OnInit {
             if (tables.length === 0) {
                 return;
             }
-            console.log(tables);
 
             this.tables = tables;
         });
