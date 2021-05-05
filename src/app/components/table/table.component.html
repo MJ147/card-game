@@ -8,13 +8,15 @@
     <div class="column-center" style="border: 1px solid">
         <div class="row" style="border: 1px solid">
             <app-face-down-cards
-                [cards]="getPlayerCards(table?.players[2])"
+                [cards]="[null, null, null]"
+                [cardOffset]="50"
             ></app-face-down-cards>
         </div>
         <div class="row-center" style="border: 1px solid">
             <div class="left">
                 <app-face-down-cards
                     [cards]="getArrayFromNumber(52)"
+                    [cardOffset]="0.2"
                 ></app-face-down-cards>
             </div>
             <div class="center">
